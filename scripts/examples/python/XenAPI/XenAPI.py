@@ -59,6 +59,7 @@ import six.moves.xmlrpc_client as xmlrpclib
 import six.moves.http_client as httplib
 import socket
 import sys
+from contextlib import contextmanager
 
 translation = gettext.translation('xen-xm', fallback = True)
 
@@ -146,6 +147,10 @@ class Session(xmlrpclib.ServerProxy):
         self.API_version = API_VERSION_1_1
 
 
+            
+
+
+
     def xenapi_request(self, methodname, params):
         if methodname.startswith('login'):
             self._login(methodname, params)
@@ -217,6 +222,21 @@ class Session(xmlrpclib.ServerProxy):
             return _Dispatcher(self.API_version, self.xenapi_request, "logout")
         else:
             return xmlrpclib.ServerProxy.__getattr__(self, name)
+
+@contextmanager
+def xapi_login(username, password, serverURI=None):
+    """serverURI is an optional argument when the connection is to a local server"""
+    try:
+        if serverURI is None:
+            session = xapi_local()
+        else:
+            session = Session(serverURI)
+        session.login_with_password(username, password, "1.0", "xen-api-scripts-xenapi.py")
+        yield session
+    finally:
+        session.xenapi.session.logout()
+        
+
 
 def xapi_local():
     return Session("http://_var_lib_xcp_xapi/", transport=UDSTransport())
