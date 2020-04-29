@@ -60,7 +60,7 @@ class TestXapiMessage(unittest.TestCase):
         try:
             self.work_dir = tempfile.mkdtemp(prefix="test-mail-alarm-")
             log_file_global = os.path.join(self.work_dir, "user.log")
-            src_file = "./mail-alarm"
+            src_file = "./scripts/mail-alarm"
             dst_file = os.path.join(self.work_dir, "mailalarm.py")
             shutil.copyfile(src_file, dst_file)
             sys.path.append(self.work_dir)

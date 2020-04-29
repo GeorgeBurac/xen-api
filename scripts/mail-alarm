@@ -24,6 +24,7 @@ from xml.sax.saxutils import unescape
 from xml.parsers.expat import ExpatError
 from socket import getfqdn
 from xcp import branding
+from contextlib import contextmanager
 
 
 # Go read man ssmtp.conf
@@ -976,7 +977,7 @@ def main():
             'Expected at least 1 argument but got none: ["%s"].' % (" ".join(sys.argv))
         )
         raise Exception("Insufficient arguments")
-    
+
     ma_username = "__dom0__mail_alarm"
     with xapi_login(ma_username, "") as session:
 
@@ -991,50 +992,50 @@ def main():
         msg = XapiMessage(sys.argv[1], mail_language, session)
 
     # We only mail messages with priority lower than or equal to max_priority
-    if msg.get_priority() > min_priority:
-        return 0
+        if msg.get_priority() > min_priority:
+            return 0
 
-    config = get_config_file()
+        config = get_config_file()
 
-    search_replace = get_search_replace(other_config)
-    destination = get_destination(other_config)
-    sender = get_sender(other_config)
+        search_replace = get_search_replace(other_config)
+        destination = get_destination(other_config)
+        sender = get_sender(other_config)
 
-    if not destination:
-        log_err("pool:other-config:mail-destination not specified")
-        return 1
+        if not destination:
+            log_err("pool:other-config:mail-destination not specified")
+            return 1
 
-    if not sender:
-        sender = "noreply@%s" % getfqdn().encode(charset)
+        if not sender:
+            sender = "noreply@%s" % getfqdn().encode(charset)
 
-    # Replace macros in config file using search_replace list
-    for s, r in search_replace:
-        config = config.replace(s, r)
+        # Replace macros in config file using search_replace list
+        for s, r in search_replace:
+            config = config.replace(s, r)
 
-    # Write out a temporary file containing the new config
-    fd, fname = tempfile.mkstemp(prefix="mail-", dir="/tmp")
-    try:
-        os.write(fd, config)
-        os.close(fd)
+        # Write out a temporary file containing the new config
+        fd, fname = tempfile.mkstemp(prefix="mail-", dir="/tmp")
+        try:
+            os.write(fd, config)
+            os.close(fd)
 
-        # Run ssmtp to send mail
-        chld_stdin, chld_stdout = os.popen2(
-            ["/usr/sbin/ssmtp", "-C%s" % fname, destination]
-        )
-        chld_stdin.write("From: %s\n" % sender)
-        chld_stdin.write('Content-Type: text/plain; charset="%s"\n' % charset)
-        chld_stdin.write("To: %s\n" % destination.encode(charset))
-        chld_stdin.write(
-            "Subject: %s\n" % msg.generate_email_subject().encode(charset)
-        )
-        chld_stdin.write("\n")
-        chld_stdin.write(msg.generate_email_body().encode(charset))
-        chld_stdin.close()
-        chld_stdout.close()
-        os.wait()
+            # Run ssmtp to send mail
+            chld_stdin, chld_stdout = os.popen2(
+                ["/usr/sbin/ssmtp", "-C%s" % fname, destination]
+            )
+            chld_stdin.write("From: %s\n" % sender)
+            chld_stdin.write('Content-Type: text/plain; charset="%s"\n' % charset)
+            chld_stdin.write("To: %s\n" % destination.encode(charset))
+            chld_stdin.write(
+                "Subject: %s\n" % msg.generate_email_subject().encode(charset)
+            )
+            chld_stdin.write("\n")
+            chld_stdin.write(msg.generate_email_body().encode(charset))
+            chld_stdin.close()
+            chld_stdout.close()
+            os.wait()
 
-    finally:
-        os.unlink(fname)
+        finally:
+            os.unlink(fname)
 
 
 if __name__ == "__main__":
