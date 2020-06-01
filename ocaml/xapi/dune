@@ -54,8 +54,6 @@
    rresult
    sha
    xxhash
-   tar
-   tar-unix
    xapi-tapctl
    x509
    xapi-types

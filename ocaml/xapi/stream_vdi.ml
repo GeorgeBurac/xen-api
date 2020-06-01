@@ -323,7 +323,7 @@ let verify_inline_checksum ifd checksum_table hdr =
     let csum = Bytes.make length' ' ' in
     Unixext.really_read ifd csum 0 length';
     let csum = Bytes.unsafe_to_string csum in
-    Tar_helpers.skip  ifd (Tar_unix.Header.compute_zero_padding_length hdr);
+    Tar_helpers.skip ifd (Tar_unix.Header.compute_zero_padding_length hdr);
     (* Look up the relevant file_name in the checksum_table *)
     let original_file_name = Filename.remove_extension file_name in
     let csum' = List.assoc original_file_name !checksum_table in
@@ -426,7 +426,7 @@ let recv_all_vdi refresh_session ifd (__context:Context.t) rpc session_id ~has_i
 
              checksum_table := (file_name, csum) :: !checksum_table;
 
-             Tar_helpers.skip  ifd (Tar_unix.Header.compute_zero_padding_length hdr);
+             Tar_helpers.skip ifd (Tar_unix.Header.compute_zero_padding_length hdr);
              made_progress __context progress (Int64.add skipped_size length);
 
              if has_inline_checksums then
@@ -486,7 +486,7 @@ let recv_all_zurich refresh_session ifd (__context:Context.t) rpc session_id pre
                end;
                debug "Decompressing %Ld bytes from %s\n" length file_name;
                Gzip.decompress ofd (fun zcat_in -> Tar_helpers.copy_n ifd zcat_in length);
-               Tar_helpers.skip  ifd (Tar_unix.Header.compute_zero_padding_length hdr);
+               Tar_helpers.skip ifd (Tar_unix.Header.compute_zero_padding_length hdr);
                (* XXX: this is totally wrong: *)
                made_progress __context progress length;
                next ();

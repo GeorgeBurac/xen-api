@@ -9,6 +9,7 @@
    xapi-cli-protocol
    stdext
    xapi_aux
+   xapi_version
   )
   (preprocess (pps ppx_deriving_rpc))
   (wrapped false)
