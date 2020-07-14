@@ -218,3 +218,6 @@ let test =
     , `Quick
     , test_create_bond_into_sriov_vlan_network )
   ]
+
+(* let () =
+  Alcotest.run "Test Bond suite" ["test", test] *)

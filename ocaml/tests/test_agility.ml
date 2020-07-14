@@ -26,3 +26,6 @@ let test_vm_agility_with_vgpu () =
     (fun () -> Agility.vm_assert_agile ~__context ~self:vm)
 
 let test = [("test_vm_agility_with_vgpu", `Quick, test_vm_agility_with_vgpu)]
+
+(* let () =
+  Alcotest.run "Test Agility suite" ["test", test] *)

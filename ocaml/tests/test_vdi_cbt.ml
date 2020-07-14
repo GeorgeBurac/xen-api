@@ -710,3 +710,6 @@ let test =
   ]
   @ test_get_nbd_info
   @ test_data_destroy
+
+let () =
+  Alcotest.run "Test Vdi Cbt suite" ["test", test]
