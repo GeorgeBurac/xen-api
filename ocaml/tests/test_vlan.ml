@@ -313,4 +313,4 @@ let test =
   ]
 
 let () =
-  Alcotest.run "Test Host Helpers suite" ["test", test]
+  Alcotest.run "Test Host Helpers suite" ["Test_vlan", test]

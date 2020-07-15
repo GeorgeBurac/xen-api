@@ -527,9 +527,10 @@ let test =
       ("test_null_vm", `Quick, test_null_vm)
     ; ("test_update_allowed_operations", `Quick, test_update_allowed_operations)
     ]
+    
 let () =
   Suite_init.harness_init () ;
   (* Alcotest hides the standard output of successful tests,
      so we will probably not exceed the 4MB limit in Travis *)
   Debug.log_to_stdout () ;
-  Alcotest.run "Test VM Allowed Operations suite" ["test", test]
+  Alcotest.run "Test VM Allowed Operations suite" ["Test_vdi_allowed_operations", test]

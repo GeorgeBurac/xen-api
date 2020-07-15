@@ -515,4 +515,4 @@ let () =
   (* Alcotest hides the standard output of successful tests,
      so we will probably not exceed the 4MB limit in Travis *)
   Debug.log_to_stdout () ;
-  Alcotest.run "Test Host Helpers suite" ["test", test]
+  Alcotest.run "Test Network SRIOV suite" ["Test_network_sriov", test]

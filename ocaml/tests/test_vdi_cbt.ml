@@ -712,4 +712,4 @@ let test =
   @ test_data_destroy
 
 let () =
-  Alcotest.run "Test Vdi Cbt suite" ["test", test]
+  Alcotest.run "Test Vdi Cbt suite" ["Test_vdi_cbt", test]

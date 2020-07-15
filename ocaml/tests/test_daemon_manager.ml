@@ -147,4 +147,4 @@ let test =
   ]
 
 let () =
-  Alcotest.run "Daemon Manager suite" ["test", test]
+  Alcotest.run "Daemon Manager suite" ["Test_daemon_manager", test]
