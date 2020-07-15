@@ -311,3 +311,6 @@ let test =
     , test_create_sriov_vlan_into_sriov_vlan_network_with_different_type_pci_device
     )
   ]
+
+let () =
+  Alcotest.run "Test Host Helpers suite" ["test", test]

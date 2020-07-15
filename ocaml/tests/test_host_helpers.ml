@@ -194,3 +194,10 @@ let test =
   ; ("test_host_set_multipathing", `Quick, test_host_set_multipathing)
   ; ("test_rpu_suppression", `Quick, test_rpu_suppression)
   ]
+
+let () =
+  Suite_init.harness_init () ;
+  (* Alcotest hides the standard output of successful tests,
+     so we will probably not exceed the 4MB limit in Travis *)
+  Debug.log_to_stdout () ;
+  Alcotest.run "Test Host Helpers suite" ["test", test]
